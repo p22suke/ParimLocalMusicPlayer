@@ -1,0 +1,26 @@
+1. SEARCH
+what was the issue?
+2. LISTS
+- put back links to make a new playlist, rename a playlist, delete a palylist; automatic save of playlist when created. 
+4. UNITS
+- the codea reads file name instead of the metadata of the file. also, it reads it the wrong way. i named a file in our conventions, and the song is 2025, the artist is the song title, the album is the song artist, the year is the album name. 
+- when our previous version stated, et shuffle and repeat only work on queue, now it needs to work on unitView. 
+- repeat behaviour is 
+- shuffle behaviour: mix-up the list. visually? spotif
+
+5. UI: tab + window, the on-buttonDifferentColor of a Tab is not working as intended... for the listView. unitView it works. they should aesthetically be a duplicate of each other. it means they are very similar. one just can't yet touch the other...only by creating a new List in listViews. the listView can't creat a new song, but can acess and execute all of the Units. 
+- option to close opened tabs. also button to great a new tab to start a playlist.  
+
+Artists globally to become Kunstnikud/Kunstnik
+Song globally to Laul. ALbUM 
+
+do we still have the seed for the switching of
+CAPS LOCK
+lower case
+Karju Karju
+See on lause
+to choose the mode of display of categories. those are categories of information for the file, the King. File has all the info my program wants. i can write a script to make my songs smaller. i have decided to ditch all the Pictures. 
+
+SHE SHUFFLE DOES NOT DO WHAT I WANT. what does it do?
+
+we need the DAY/NIGHT BUTTON also. make it square, so it looks like a 90s button. 3d.
