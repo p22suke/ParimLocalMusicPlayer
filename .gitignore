@@ -1,0 +1,26 @@
+target/
+.idea/
+.DS_Store
+data/analytics/plays.json
+
+# VS Code / IDE state
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# Build / runtime artifacts
+out/
+dist/
+build/
+*.log
+hs_err_pid*
+
+# Local music files (keep placeholder only)
+data/music/*
+!data/music/.gitkeep
+
+# Local analytics output (keep placeholder only)
+data/analytics/*
+!data/analytics/.gitkeep
