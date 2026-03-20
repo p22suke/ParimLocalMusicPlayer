@@ -14,28 +14,17 @@ import model.RepeatMode;
 import model.Song;
 import service.PlaybackService;
 
+import java.util.function.Consumer;
+
 /**
  * Bottom floor player bar with compact now-playing metadata and transport
  * controls.
  */
 public final class PlayerBar extends VBox {
-    public PlayerBar(PlaybackService playbackService) {
+    public PlayerBar(PlaybackService playbackService, Consumer<Song> likeSongHandler) {
         getStyleClass().addAll("section-pane", "player-bar");
         setSpacing(8);
         setPadding(new Insets(8, 10, 8, 10));
-
-        Label nowPlayingLabel = new Label();
-        nowPlayingLabel.setWrapText(true);
-        nowPlayingLabel.setMaxWidth(Double.MAX_VALUE);
-        nowPlayingLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            Song song = playbackService.currentSongProperty().get();
-            return song == null
-                    ? "idle"
-                    : song.getDisplayTitle() + " - "
-                    + song.getDisplayArtist() + " - "
-                    + song.getDisplayAlbum() + " - "
-                    + song.getDisplayYear();
-        }, playbackService.currentSongProperty()));
 
         Slider progressSlider = new Slider(0, 1, 0);
         progressSlider.setMaxWidth(Double.MAX_VALUE);
@@ -71,6 +60,16 @@ public final class PlayerBar extends VBox {
         Button nextButton = new Button(">>");
         nextButton.setOnAction(event -> playbackService.next());
 
+        Button heartButton = new Button("♥");
+        heartButton.getStyleClass().add("heart-button");
+        heartButton.disableProperty().bind(playbackService.currentSongProperty().isNull());
+        heartButton.setOnAction(event -> {
+            Song song = playbackService.currentSongProperty().get();
+            if (song != null) {
+                likeSongHandler.accept(song);
+            }
+        });
+
         Button shuffleButton = new Button();
         shuffleButton.getStyleClass().add("status-toggle");
         shuffleButton.textProperty().bind(Bindings.when(playbackService.shuffleEnabledProperty()).then("Shuffle").otherwise("shuffle"));
@@ -90,17 +89,28 @@ public final class PlayerBar extends VBox {
         playbackService.repeatModeProperty().addListener((observable, oldValue, newValue) ->
                 updateToggleState(repeatButton, newValue != RepeatMode.OFF));
 
-        HBox controls = new HBox(6, previousButton, playPauseButton, nextButton, shuffleButton, repeatButton);
+        HBox controls = new HBox(6, previousButton, playPauseButton, nextButton, heartButton, shuffleButton, repeatButton);
         controls.setAlignment(Pos.CENTER_LEFT);
 
         Label contextLabel = new Label();
-        contextLabel.textProperty().bind(playbackService.currentContextProperty());
+        contextLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            Song song = playbackService.currentSongProperty().get();
+            String context = playbackService.currentContextProperty().get();
+            if (song == null) {
+                return context == null || context.isBlank() ? "idle" : context;
+            }
+            String fileName = song.getFilePath().getFileName() == null
+                    ? song.getFilePath().toString()
+                    : song.getFilePath().getFileName().toString();
+            String prefix = (context == null || context.isBlank()) ? "Playing from: unknown" : context;
+            return prefix + " / " + fileName;
+        }, playbackService.currentSongProperty(), playbackService.currentContextProperty()));
 
         Label errorLabel = new Label();
         errorLabel.getStyleClass().add("error-label");
         errorLabel.textProperty().bind(playbackService.errorMessageProperty());
 
-        getChildren().addAll(nowPlayingLabel, progressSlider, controls, contextLabel, errorLabel);
+        getChildren().addAll(progressSlider, controls, contextLabel, errorLabel);
         VBox.setVgrow(progressSlider, Priority.NEVER);
     }
 

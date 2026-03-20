@@ -12,7 +12,7 @@ import java.util.Objects;
  * use a simple CamelCase conversion.
  */
 public final class Song {
-    public static final String UNKNOWN_ARTIST = "Unknown Artist";
+    public static final String UNKNOWN_ARTIST = "Unknown Kunstnik";
     public static final String UNKNOWN_ALBUM = "Album";
     public static final String UNKNOWN_YEAR = "00000";
 

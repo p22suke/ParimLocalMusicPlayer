@@ -1,5 +1,8 @@
 {
   "playlists" : [ {
+    "name" : "Liked Songs",
+    "songIds" : [ "/Users/liina/init/ParimLocalMusicPlayer/data/music/MAAKAS - Kiil (Prod. anPablo).mp3" ]
+  }, {
     "name" : "myPlaylist3",
     "songIds" : [ "/Users/liina/init/ParimLocalMusicPlayer/data/music/James Davis - Co-Pilot_lRbf-sHm3-o_youtube.mp3", "/Users/liina/init/ParimLocalMusicPlayer/data/music/Tommy Genesis - Hair Like Water Wavy Like The Sea feat. Abra (Music Video).mp3" ]
   } ]

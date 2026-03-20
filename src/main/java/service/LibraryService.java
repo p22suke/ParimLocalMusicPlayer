@@ -116,6 +116,9 @@ public final class LibraryService {
         String[] parts = baseName.split("\\s+-\\s+");
 
         if (parts.length >= 4) {
+            if (looksLikeYear(parts[3])) {
+                return new ParsedMetadata(parts[1], parts[0], parts[2], parts[3]);
+            }
             return new ParsedMetadata(parts[3], parts[0], parts[1], parts[2]);
         }
         if (parts.length == 3) {
@@ -148,6 +151,19 @@ public final class LibraryService {
     private String stripExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+    }
+
+    private boolean looksLikeYear(String value) {
+        String cleaned = value == null ? "" : value.trim();
+        if (cleaned.length() != 4) {
+            return false;
+        }
+        for (int index = 0; index < cleaned.length(); index++) {
+            if (!Character.isDigit(cleaned.charAt(index))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private record ParsedMetadata(String title, String artist, String album, String year) {

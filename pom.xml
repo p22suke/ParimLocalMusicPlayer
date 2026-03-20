@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>parim</groupId>
-    <artifactId>ParimLocalMusicPlayer</artifactId>
+    <artifactId>muLocalMusicList</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>ParimLocalMusicPlayer</name>
+    <name>muLocalMusicList</name>
     <description>Minimal local-first JavaFX desktop music player MVP.</description>
 
     <properties>
@@ -93,9 +93,9 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>Launcher</mainClass>
-                    <launcher>ParimLocalMusicPlayer</launcher>
-                    <jlinkZipName>ParimLocalMusicPlayer-runtime</jlinkZipName>
-                    <jlinkImageName>ParimLocalMusicPlayer-runtime</jlinkImageName>
+                    <launcher>muLocalMusicList</launcher>
+                    <jlinkZipName>muLocalMusicList-runtime</jlinkZipName>
+                    <jlinkImageName>muLocalMusicList-runtime</jlinkImageName>
                     <stripDebug>true</stripDebug>
                     <noHeaderFiles>true</noHeaderFiles>
                     <noManPages>true</noManPages>
@@ -119,9 +119,9 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>1.7.4</version>
                         <configuration>
-                            <name>ParimLocalMusicPlayer</name>
+                            <name>muLocalMusicList</name>
                             <appVersion>1.0.0</appVersion>
-                            <vendor>ParimLocalMusicPlayer</vendor>
+                            <vendor>muLocalMusicList</vendor>
                             <input>${project.build.directory}</input>
                             <mainJar>${project.build.finalName}.jar</mainJar>
                             <mainClass>Launcher</mainClass>
@@ -141,9 +141,9 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>1.7.4</version>
                         <configuration>
-                            <name>ParimLocalMusicPlayer</name>
+                            <name>muLocalMusicList</name>
                             <appVersion>1.0.0</appVersion>
-                            <vendor>ParimLocalMusicPlayer</vendor>
+                            <vendor>muLocalMusicList</vendor>
                             <input>${project.build.directory}</input>
                             <mainJar>${project.build.finalName}.jar</mainJar>
                             <mainClass>Launcher</mainClass>

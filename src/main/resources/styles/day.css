@@ -104,6 +104,97 @@
     -fx-text-fill: #111111;
 }
 
+.list-pane,
+.unit-pane {
+    -fx-background-color: #f3efe6;
+}
+
+.tab-bar {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.tab-bar .viewport {
+    -fx-background-color: transparent;
+}
+
+.tab-row {
+    -fx-background-color: transparent;
+}
+
+.tab-container {
+    -fx-background-color: transparent;
+}
+
+.tab-button {
+    -fx-background-color: #f3efe6;
+    -fx-text-fill: #111111;
+    -fx-border-color: #111111;
+    -fx-border-width: 1px;
+    -fx-background-radius: 0;
+    -fx-padding: 2 8 2 8;
+}
+
+.tab-button.tab-active {
+    -fx-background-color: #d7ccb9;
+    -fx-font-weight: bold;
+}
+
+.tab-close-button {
+    -fx-background-color: #f3efe6;
+    -fx-text-fill: #111111;
+    -fx-border-color: #111111;
+    -fx-border-width: 1px;
+    -fx-background-radius: 0;
+    -fx-padding: 0 4 0 4;
+}
+
+.tab-add-button {
+    -fx-background-color: #e5ddd0;
+    -fx-text-fill: #111111;
+    -fx-border-color: #111111;
+    -fx-border-width: 1px;
+    -fx-background-radius: 0;
+}
+
+.playlist-actions .hyperlink {
+    -fx-text-fill: #111111;
+}
+
+.day-night-button {
+    -fx-min-width: 42px;
+    -fx-min-height: 28px;
+    -fx-max-width: 42px;
+    -fx-max-height: 28px;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #d8d8d8);
+    -fx-border-color: #111111;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.day-night-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #d0d0d0, #f0f0f0);
+}
+
+.display-mode-button {
+    -fx-min-width: 52px;
+    -fx-min-height: 28px;
+    -fx-max-height: 28px;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #d8d8d8);
+    -fx-border-color: #111111;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.display-mode-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #d0d0d0, #f0f0f0);
+}
+
 .player-bar .button {
     -fx-background-radius: 0;
 }
@@ -111,6 +202,19 @@
 .player-bar .button.primary-button {
     -fx-min-width: 120px;
     -fx-padding: 4 8 4 8;
+}
+
+.player-bar .button.heart-button {
+    -fx-min-width: 34px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-color: #111111;
+    -fx-text-fill: #ff7070;
+    -fx-border-color: #f3efe6;
+}
+
+.player-bar .button.heart-button:disabled {
+    -fx-opacity: 0.5;
 }
 
 .player-bar .button.toggle-on {

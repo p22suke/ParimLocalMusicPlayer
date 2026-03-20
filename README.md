@@ -13,7 +13,7 @@ head readme.md failid on 9 rida pikad
 Important editing rule for future sessions: keep README.md lines 1-9 unchanged unless Liina explicitly says otherwise.
 
 ### Project identity
-- Name: ParimLocalMusicPlayer
+- Name: muLocalMusicList
 - Type: local-first desktop music player
 - Status: working MVP
 - Language: Java 21
@@ -65,7 +65,7 @@ mvn -Pmac-installer clean package org.panteleyev:jpackage-maven-plugin:1.7.4:jpa
 Expected installer output:
 
 ```text
-target/installer/ParimLocalMusicPlayer-1.0.0.dmg
+target/installer/muLocalMusicList-1.0.0.dmg
 ```
 
 ### Entry points and architecture
@@ -218,7 +218,7 @@ Important detail: song IDs are currently absolute file paths, not generated UUID
 Use something close to this:
 
 ```text
-I am working on ParimLocalMusicPlayer, a Java 21 + JavaFX 21 local-first desktop music player built with Maven. The app scans data/music for mp3 and wav files, infers metadata mostly from filenames, stores analytics in data/analytics/plays.json and playlists in data/playlists/playlists.json using Jackson, and uses a layered structure with model/, repository/, service/, and ui/. Playback is handled by JavaFX MediaPlayer through PlaybackService. Analytics are only recorded after 30 seconds of listening, and playlist plays are only counted after 2 qualified songs. Main entry point is App via Launcher. Please preserve README.md lines 1-9 if editing that file.
+I am working on muLocalMusicList, a Java 21 + JavaFX 21 local-first desktop music player built with Maven. The app scans data/music for mp3 and wav files, infers metadata mostly from filenames, stores analytics in data/analytics/plays.json and playlists in data/playlists/playlists.json using Jackson, and uses a layered structure with model/, repository/, service/, and ui/. Playback is handled by JavaFX MediaPlayer through PlaybackService. Analytics are only recorded after 30 seconds of listening, and playlist plays are only counted after 2 qualified songs. Main entry point is App via Launcher. Please preserve README.md lines 1-9 if editing that file.
 ```
 
 ### Short roadmap candidates already implied by the codebase

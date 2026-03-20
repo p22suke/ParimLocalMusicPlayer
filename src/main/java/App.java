@@ -13,7 +13,7 @@ import ui.MainView;
 import java.nio.file.Path;
 
 /**
- * Main entry point for ParimLocalMusicPlayer.
+ * Main entry point for muLocalMusicList.
  */
 public final class App extends Application {
     private MainView mainView;
@@ -36,7 +36,7 @@ public final class App extends Application {
         Scene scene = new Scene(mainView, 420, 900);
         mainView.attachScene(scene);
 
-        stage.setTitle("ParimLocalMusicPlayer");
+        stage.setTitle("muLocalMusicList");
         stage.setMinWidth(360);
         stage.setMinHeight(640);
         stage.setAlwaysOnTop(true);
