@@ -26,12 +26,18 @@ Important editing rule for future sessions: keep README.md lines 1-9 unchanged u
 - Scans `data/music/` recursively for `.mp3` and `.wav` files.
 - Builds a local library from filenames and folder structure.
 - Plays audio with JavaFX `MediaPlayer`.
-- Shows songs, albums, artists, years, playlists, queue, and a small “memory” / analytics area.
+- Uses a day-2 dual-pane UI: global search, listView, unitView, and the existing player bar.
+- listView has fixed tabs for playlists, albums, and artists.
+- Clicking a listView item opens or refreshes a song context in unitView.
+- unitView keeps a fixed `All Songs` tab plus closable context tabs for playlists, albums, and artists.
+- Playback happens from unitView via double-click or `Enter` on a song row.
 - Supports playlist creation, rename, delete, save, load, and play.
+- Supports adding songs to playlists from the song-table context menu.
+- Supports a pinned `Liked Music` playlist and adding the current song there from the player bar.
 - Tracks song plays only when a song has been listened to for at least 30 seconds.
 - Tracks playlist plays only when at least 2 songs in that playlist qualified as played.
 - Supports queue navigation, shuffle, repeat, seek, previous / next, and “play next”.
-- Supports day / night / auto theme switching.
+- Supports day / night switching and a text display-mode toggle.
 
 ### Runtime assumptions
 - The app resolves paths relative to the project root (`user.dir`).
@@ -39,6 +45,8 @@ Important editing rule for future sessions: keep README.md lines 1-9 unchanged u
 	- `data/music/`
 	- `data/analytics/plays.json`
 	- `data/playlists/playlists.json`
+- The repo may also contain a committed sample bundle in `data/untitled folder/` for moving music between machines.
+- The scanner still reads only `data/music/`, so sample files stored elsewhere must be copied or moved there before launch.
 - Main runtime window is intentionally narrow and tall: `420 x 900` default.
 - The stage is set to always-on-top.
 
@@ -96,11 +104,16 @@ target/installer/muLocalMusicList-1.0.0.dmg
 - `src/main/java/service/PlaylistPersistenceService.java`
 	- Maps stored playlist snapshots back to in-memory `Playlist` objects.
 - `src/main/java/service/ThemeService.java`
-	- Resolves day / night / auto theme.
-	- Auto mode can use `-Dparim.latitude=... -Dparim.longitude=...`.
+	- Provides theme selection support for the JavaFX scene.
 - `src/main/java/ui/MainView.java`
 	- Main screen.
-	- Holds navigation logic and view switching.
+	- Coordinates global search, listView, unitView, theme toggle, and display-mode toggle.
+- `src/main/java/ui/ListViewPane.java`
+	- Fixed context-selector tabs and playlist actions.
+- `src/main/java/ui/UnitViewPane.java`
+	- Song-table surface for playback contexts.
+- `src/main/java/ui/TabBar.java`
+	- Shared horizontally scrollable tab component used by both panes.
 - `src/main/resources/styles/day.css`
 - `src/main/resources/styles/night.css`
 
@@ -117,10 +130,12 @@ ARTIST - ALBUM - YEAR - TITLE.mp3
 	- 3 parts: artist / album / title, year becomes `00000`
 	- 2 parts: artist / title, album falls back to parent folder or `Album`
 	- otherwise title falls back to filename, artist = `Unknown Artist`, album = `Album`, year = `00000`
-- Display formatting intentionally transforms values:
-	- title -> lowercase
-	- artist -> uppercase
-	- album -> simple CamelCase
+- Display formatting is now user-switchable from the main view:
+	- `CAPS`
+	- `lower`
+	- `Karju`
+	- `Lause`
+- Default display mode can also be set with `-Dparim.displayMode=...`.
 
 ### Persistence format right now
 
@@ -160,17 +175,17 @@ Important detail: song IDs are currently absolute file paths, not generated UUID
 
 ### Current UX / design specifics
 - Minimal JavaFX UI with CSS styling.
-- Narrow vertical layout with 3 stacked zones:
-	- navigation
-	- content
+- Narrow vertical layout with 4 stacked zones:
+	- global search and controls
+	- listView (tabs + content)
+	- unitView (tabs + song table)
 	- player bar
-- Search filters the current view.
+- One search field filters both listView content and the active unitView song list.
+- unitView tabs are horizontally scrollable and behave like a lightweight browser tab strip.
+- The `All Songs` tab is always present.
 - Main aesthetic goal: terminal-like / minimal / clean, not flashy.
 - No cover art system yet.
-- Onboarding includes:
-	- filename pattern hint
-	- open music folder
-	- rescan library
+- The player bar includes seek, previous / next, play-pause, shuffle, repeat, and a like button.
 
 ### Current analytics rules
 - Qualified song play threshold: `30` seconds.
@@ -213,12 +228,13 @@ Important detail: song IDs are currently absolute file paths, not generated UUID
 - There is no dependency injection container.
 - App is local-first and assumes one user.
 - Song paths are machine-local, so playlist / analytics portability is limited.
+- Even though a sample bundle can be committed under `data/untitled folder/`, the runtime library source remains `data/music/`.
 
 ### Good prompt context to give ChatGPT in a future session
 Use something close to this:
 
 ```text
-I am working on muLocalMusicList, a Java 21 + JavaFX 21 local-first desktop music player built with Maven. The app scans data/music for mp3 and wav files, infers metadata mostly from filenames, stores analytics in data/analytics/plays.json and playlists in data/playlists/playlists.json using Jackson, and uses a layered structure with model/, repository/, service/, and ui/. Playback is handled by JavaFX MediaPlayer through PlaybackService. Analytics are only recorded after 30 seconds of listening, and playlist plays are only counted after 2 qualified songs. Main entry point is App via Launcher. Please preserve README.md lines 1-9 if editing that file.
+I am working on muLocalMusicList, a Java 21 + JavaFX 21 local-first desktop music player built with Maven. The app scans data/music for mp3 and wav files, infers metadata mostly from filenames, stores analytics in data/analytics/plays.json and playlists in data/playlists/playlists.json using Jackson, and uses a dual-pane JavaFX UI with a global search row, a listView for playlists/albums/artists, a unitView for playable song contexts, and a player bar. Playback is handled by JavaFX MediaPlayer through PlaybackService. Analytics are only recorded after 30 seconds of listening, and playlist plays are only counted after 2 qualified songs. Main entry point is App via Launcher. Please preserve README.md lines 1-9 if editing that file.
 ```
 
 ### Short roadmap candidates already implied by the codebase

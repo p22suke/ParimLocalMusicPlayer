@@ -21,6 +21,10 @@ hs_err_pid*
 data/music/*
 !data/music/.gitkeep
 
+# Committed sample music bundle for cross-machine testing
+!data/untitled folder/
+!data/untitled folder/**
+
 # Local analytics output (keep placeholder only)
 data/analytics/*
 !data/analytics/.gitkeep
