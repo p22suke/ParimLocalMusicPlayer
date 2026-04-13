@@ -13,7 +13,7 @@ head readme.md failid on 9 rida pikad
 Important editing rule for future sessions: keep README.md lines 1-9 unchanged unless Liina explicitly says otherwise.
 
 ### Project identity
-- Name: muLocalMusicList
+- Name: PartimLocalMusicPlayer
 - Type: local-first desktop music player
 - Status: working MVP
 - Language: Java 21

@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>parim</groupId>
-    <artifactId>muLocalMusicList</artifactId>
+    <artifactId>ParimLocalMusicPlayer</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>muLocalMusicList</name>
+    <name>ParimLocalMusicPlayer</name>
     <description>Minimal local-first JavaFX desktop music player MVP.</description>
 
     <properties>
