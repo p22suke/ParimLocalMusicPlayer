@@ -1,22 +1,18 @@
-package model;
+package mudelid;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Queue state is intentionally kept separate from the JavaFX media player so it
  * can be tested without touching UI or audio APIs.
  */
 public final class PlaybackQueue {
-    private final Random random = new Random();
     private final List<Song> sourceSongs = new ArrayList<>();
     private final List<Song> activeSongs = new ArrayList<>();
 
     private int currentIndex = -1;
-    private boolean shuffleEnabled;
     private RepeatMode repeatMode = RepeatMode.OFF;
     private String contextName = "All Songs";
 
@@ -42,10 +38,6 @@ public final class PlaybackQueue {
         return contextName;
     }
 
-    public boolean isShuffleEnabled() {
-        return shuffleEnabled;
-    }
-
     public RepeatMode getRepeatMode() {
         return repeatMode;
     }
@@ -61,13 +53,6 @@ public final class PlaybackQueue {
 
     public boolean hasSongs() {
         return !activeSongs.isEmpty();
-    }
-
-    public Song toggleShuffle() {
-        shuffleEnabled = !shuffleEnabled;
-        Song current = getCurrentSong();
-        rebuildActiveSongs(current);
-        return getCurrentSong();
     }
 
     public Song moveToSong(Song song) {
@@ -159,14 +144,7 @@ public final class PlaybackQueue {
         }
 
         Song songToKeep = preferredSong != null ? preferredSong : getSafeSongFromSource();
-        if (shuffleEnabled && activeSongs.size() > 1) {
-            activeSongs.remove(songToKeep);
-            Collections.shuffle(activeSongs, random);
-            activeSongs.add(0, songToKeep);
-            currentIndex = 0;
-        } else {
-            currentIndex = Math.max(0, activeSongs.indexOf(songToKeep));
-        }
+        currentIndex = Math.max(0, activeSongs.indexOf(songToKeep));
     }
 
     private Song getSafeSongFromSource() {

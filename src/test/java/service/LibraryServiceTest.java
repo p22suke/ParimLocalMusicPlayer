@@ -1,6 +1,6 @@
 package service;
 
-import model.Song;
+import mudelid.Song;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -27,15 +27,4 @@ class LibraryServiceTest {
         assertEquals("Album", songs.getFirst().getDisplayAlbum());
     }
 
-    @Test
-    void missingYearUsesZeroPlaceholder() throws IOException {
-        Path musicDir = Files.createDirectories(tempDir.resolve("music"));
-        Files.writeString(musicDir.resolve("artist - title.mp3"), "demo");
-
-        LibraryService service = new LibraryService(musicDir);
-        List<Song> songs = service.loadLibrary();
-
-        assertEquals(1, songs.size());
-        assertEquals("00000", songs.getFirst().getDisplayYear());
-    }
 }

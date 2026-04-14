@@ -1,6 +1,6 @@
 package repository;
 
-import model.PlaylistSnapshot;
+import mudelid.PlaylistSnapshot;
 
 import java.util.List;
 

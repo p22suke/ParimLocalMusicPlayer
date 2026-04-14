@@ -1,8 +1,8 @@
 package service;
 
-import model.PlayEvent;
-import model.Song;
-import model.SongStats;
+import mudelid.PlayEvent;
+import mudelid.Song;
+import mudelid.SongStats;
 import repository.AnalyticsRepository;
 
 import java.time.Instant;

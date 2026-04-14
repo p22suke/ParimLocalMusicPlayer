@@ -1,8 +1,8 @@
 package service;
 
-import model.Playlist;
-import model.PlaylistSnapshot;
-import model.Song;
+import mudelid.Playlist;
+import mudelid.PlaylistSnapshot;
+import mudelid.Song;
 import org.junit.jupiter.api.Test;
 import repository.PlaylistRepository;
 
@@ -22,7 +22,7 @@ class PlaylistPersistenceServiceTest {
 
         PlaylistPersistenceService service = new PlaylistPersistenceService(repository);
 
-        Song song = new Song("song-1", "Title", "Artist", "Album", "2024", Path.of("one.mp3"));
+        Song song = new Song("song-1", "Title", "Artist", "Album", Path.of("one.mp3"));
         Map<String, Song> songsById = new HashMap<>();
         songsById.put(song.getId(), song);
 
@@ -39,7 +39,7 @@ class PlaylistPersistenceServiceTest {
         InMemoryPlaylistRepository repository = new InMemoryPlaylistRepository();
         PlaylistPersistenceService service = new PlaylistPersistenceService(repository);
 
-        Song song = new Song("song-1", "Title", "Artist", "Album", "2024", Path.of("one.mp3"));
+        Song song = new Song("song-1", "Title", "Artist", "Album", Path.of("one.mp3"));
         Playlist playlist = new Playlist("Focus");
         playlist.addSong(song);
 

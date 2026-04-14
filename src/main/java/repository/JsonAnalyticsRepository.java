@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import model.PlayEvent;
+import mudelid.PlayEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;

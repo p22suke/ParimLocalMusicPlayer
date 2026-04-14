@@ -1,8 +1,13 @@
 package service;
 
-import model.Album;
-import model.Artist;
-import model.Song;
+import mudelid.Album;
+import mudelid.Artist;
+import mudelid.Song;
+
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,20 +18,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Scans the local music folder and extracts metadata for MP3 and WAV files.
  *
- * For the MVP this service stays pure Java and does not depend on any native or
- * third-party tagging library. Metadata is inferred from the filename first and
- * then from the folder structure as a fallback. This keeps the project easy to
- * export on both macOS and Windows while leaving room for richer tag parsing in
- * v2.
+ * Metadata is read from embedded audio tags (ID3 for MP3, ID3 chunks for WAV)
+ * first. Filename-based parsing is used as a fallback for any fields that are
+ * missing or empty in the actual tags.
  */
 public final class LibraryService {
     private static final Set<String> SUPPORTED_EXTENSIONS = Set.of("mp3", "wav");
+
+    static {
+        // jaudiotagger is very chatty; silence it
+        Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
+    }
 
     private final Path musicDirectory;
     private final List<String> warnings = new ArrayList<>();
@@ -46,6 +56,7 @@ public final class LibraryService {
         try (Stream<Path> pathStream = Files.walk(musicDirectory)) {
             return pathStream
                     .filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName() != null && !p.getFileName().toString().startsWith("._"))
                     .map(this::loadSong)
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparing(Song::getDisplayArtist)
@@ -94,7 +105,8 @@ public final class LibraryService {
             return null;
         }
 
-        ParsedMetadata parsed = parseMetadataFromPath(filePath);
+        ParsedMetadata tagMeta = readTagsFromFile(filePath);
+        ParsedMetadata parsed = tagMeta != null ? tagMeta : parseMetadataFromPath(filePath);
         return new Song(
                 filePath.toAbsolutePath().normalize().toString(),
                 parsed.title(),
@@ -116,20 +128,18 @@ public final class LibraryService {
         String[] parts = baseName.split("\\s+-\\s+");
 
         if (parts.length >= 4) {
-            if (looksLikeYear(parts[3])) {
-                return new ParsedMetadata(parts[1], parts[0], parts[2], parts[3]);
-            }
+            // expected format: ARTIST - ALBUM - YEAR - TITLE
             return new ParsedMetadata(parts[3], parts[0], parts[1], parts[2]);
         }
         if (parts.length == 3) {
-            return new ParsedMetadata(parts[2], parts[0], parts[1], Song.UNKNOWN_YEAR);
+            return new ParsedMetadata(parts[2], parts[0], parts[1], "");
         }
         if (parts.length == 2) {
-            return new ParsedMetadata(parts[1], parts[0], parentAlbum, Song.UNKNOWN_YEAR);
+            return new ParsedMetadata(parts[1], parts[0], parentAlbum, "");
         }
 
         warnings.add("Metadata fallback used for: " + filePath.getFileName());
-        return new ParsedMetadata(baseName, Song.UNKNOWN_ARTIST, parentAlbum, Song.UNKNOWN_YEAR);
+        return new ParsedMetadata(baseName, Song.UNKNOWN_ARTIST, parentAlbum, "");
     }
 
     private String fallbackAlbumFromFolder(Path filePath) {
@@ -153,17 +163,34 @@ public final class LibraryService {
         return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
     }
 
-    private boolean looksLikeYear(String value) {
-        String cleaned = value == null ? "" : value.trim();
-        if (cleaned.length() != 4) {
-            return false;
-        }
-        for (int index = 0; index < cleaned.length(); index++) {
-            if (!Character.isDigit(cleaned.charAt(index))) {
-                return false;
+    private ParsedMetadata readTagsFromFile(Path filePath) {
+        try {
+            AudioFile audioFile = AudioFileIO.read(filePath.toFile());
+            Tag tag = audioFile.getTag();
+            if (tag == null) {
+                return null;
             }
+            String title = tag.getFirst(FieldKey.TITLE);
+            String artist = tag.getFirst(FieldKey.ARTIST);
+            String album = tag.getFirst(FieldKey.ALBUM);
+            String year = tag.getFirst(FieldKey.YEAR);
+            // only use tag data if at least one real field is present
+            if (isBlank(title) && isBlank(artist) && isBlank(album)) {
+                return null;
+            }
+            ParsedMetadata fromFilename = parseMetadataFromPath(filePath);
+            return new ParsedMetadata(
+                    isBlank(title) ? fromFilename.title() : title.trim(),
+                    isBlank(artist) ? fromFilename.artist() : artist.trim(),
+                    isBlank(album) ? fromFilename.album() : album.trim(),
+                    isBlank(year) ? fromFilename.year() : year.trim());
+        } catch (Exception e) {
+            return null; // fall back to filename parsing
         }
-        return true;
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private record ParsedMetadata(String title, String artist, String album, String year) {

@@ -1,10 +1,10 @@
-package ui;
+package meik;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.Song;
+import mudelid.Song;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,9 +17,9 @@ public final class UnitViewPane extends VBox {
     private final TableView<Song> songTable;
 
     public UnitViewPane(TableView<Song> songTable,
-                        Consumer<String> onTabSelected,
-                        Consumer<String> onTabClosed,
-                        Runnable onCreateTab) {
+            Consumer<String> onTabSelected,
+            Consumer<String> onTabClosed,
+            Runnable onCreateTab) {
         this.songTable = songTable;
 
         getStyleClass().addAll("section-pane", "unit-pane");

@@ -1,29 +1,29 @@
 .root {
     -fx-font-family: "Menlo", "Consolas", monospace;
     -fx-font-size: 12px;
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
+    -fx-background-color: white;
+    -fx-text-fill: #ff2e00;
 }
 
 .app-root {
-    -fx-background-color: #ff9700;
+    -fx-background-color: white;
 }
 
 .section-pane {
-    -fx-background-color: #ff9700;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-border-color: #ff2e00;
     -fx-border-width: 1px;
 }
 
 .nav-bar,
 .player-bar {
-    -fx-background-color: #111111;
-    -fx-text-fill: #ff9700;
+    -fx-background-color: #ff2e00;
+    -fx-text-fill: white;
 }
 
 .nav-bar .hyperlink,
 .hyperlink {
-    -fx-text-fill: #111111;
+    -fx-text-fill: red;
     -fx-border-color: transparent;
     -fx-padding: 2 0 2 0;
 }
@@ -31,15 +31,15 @@
 .nav-bar .hyperlink,
 .player-bar .label,
 .player-bar .button {
-    -fx-text-fill: #ff9700;
+    -fx-text-fill: white;
 }
 
 .player-bar .button,
 .player-bar .slider,
 .player-bar .slider .track,
 .player-bar .slider .thumb {
-    -fx-background-color: #111111;
-    -fx-border-color: #ff9700;
+    -fx-background-color: red;
+    -fx-border-color: white;
 }
 
 .hyperlink:hover {
@@ -48,7 +48,7 @@
 
 .section-header {
     -fx-font-weight: bold;
-    -fx-text-fill: #111111;
+    -fx-text-fill: red;
 }
 
 .helper-label {
@@ -64,31 +64,31 @@
 .text-field,
 .slider,
 .button {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-border-color: red;
     -fx-border-width: 1px;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #e5ddd0;
+    -fx-background-color: white;
 }
 
 .table-view .column-header,
 .table-view .filler {
-    -fx-background-color: #e5ddd0;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-border-color: red;
 }
 
 .table-row-cell,
 .list-cell {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
+    -fx-background-color: red;
+    -fx-text-fill: white;
 }
 
 .table-row-cell:selected,
 .list-cell:filled:selected {
-    -fx-background-color: #ff6600;
+    -fx-background-color: white;
 }
 
 .middle-floor,
@@ -96,17 +96,17 @@
 .middle-floor .text-field,
 .middle-floor .table-view,
 .middle-floor .list-view {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
+    -fx-background-color: red;
+    -fx-text-fill: white;
 }
 
 .middle-floor .hyperlink {
-    -fx-text-fill: #111111;
+    -fx-text-fill: blue;
 }
 
 .list-pane,
 .unit-pane {
-    -fx-background-color: #ff9700;
+    -fx-background-color: white;
 }
 
 .tab-bar {
@@ -128,32 +128,33 @@
 }
 
 .tab-button {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-border-color: red;
     -fx-border-width: 1px;
     -fx-background-radius: 0;
     -fx-padding: 2 8 2 8;
 }
 
 .tab-button.tab-active {
-    -fx-background-color: #ff6600;
+    -fx-background-color: #ff2e00;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
 .tab-close-button {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-border-color: red;
     -fx-border-width: 1px;
     -fx-background-radius: 0;
     -fx-padding: 0 4 0 4;
 }
 
 .tab-add-button {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-border-color: red;
     -fx-border-width: 1px;
     -fx-background-radius: 0;
 }
@@ -167,32 +168,11 @@
     -fx-min-height: 28px;
     -fx-max-width: 42px;
     -fx-max-height: 28px;
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #ff6600);
-    -fx-border-color: #111111;
+    -fx-border-color: white;
     -fx-border-width: 2px;
     -fx-background-radius: 0;
     -fx-font-size: 10px;
     -fx-font-weight: bold;
-}
-
-.day-night-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #d0d0d0, #ff6600);
-}
-
-.display-mode-button {
-    -fx-min-width: 52px;
-    -fx-min-height: 28px;
-    -fx-max-height: 28px;
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #ff6600);
-    -fx-border-color: #111111;
-    -fx-border-width: 2px;
-    -fx-background-radius: 0;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-}
-
-.display-mode-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #d0d0d0, #ff6600);
 }
 
 .player-bar .button {
@@ -200,48 +180,35 @@
 }
 
 .player-bar .button.primary-button {
-    -fx-min-width: 120px;
+    -fx-min-width: 171px;
     -fx-padding: 4 8 4 8;
 }
 
-.player-bar .button.heart-button {
-    -fx-min-width: 34px;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-background-color: #111111;
-    -fx-text-fill: #ff7070;
-    -fx-border-color: #ff9700;
-}
-
-.player-bar .button.heart-button:disabled {
-    -fx-opacity: 0.5;
-}
-
 .player-bar .button.toggle-on {
-    -fx-background-color: #5cff5c;
+    -fx-background-color: white;
     -fx-text-fill: #111111;
     -fx-border-color: #5cff5c;
 }
 
 .player-bar .button.toggle-off {
     -fx-background-color: #111111;
-    -fx-text-fill: #ff9700;
-    -fx-border-color: #ff9700;
+    -fx-text-fill: red;
+    -fx-border-color: red;
 }
 
 .error-label {
-    -fx-text-fill: #8a1f11;
+    -fx-text-fill: blue;
 }
 
 .dialog-pane {
-    -fx-background-color: #ff9700;
-    -fx-border-color: #111111;
+    -fx-background-color: red;
+    -fx-border-color: white;
     -fx-border-width: 1px;
 }
 
 .dialog-pane:header .header-panel,
-.dialog-pane > *.button-bar > *.container {
-    -fx-background-color: #ff6600;
+.dialog-pane>*.button-bar>*.container {
+    -fx-background-color: #5cff5c;
 }
 
 .dialog-pane .label,
@@ -252,8 +219,8 @@
 
 .dialog-pane .text-field,
 .dialog-pane .button {
-    -fx-background-color: #ff9700;
-    -fx-text-fill: #111111;
-    -fx-border-color: #111111;
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-border-color: red;
     -fx-border-width: 1px;
 }

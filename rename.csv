@@ -1,0 +1,9 @@
+# Kaustade ümbernimetamine - src ja target jäävad Maveni jaoks
+# Muutmine nõuab ka koodi uuendamist (viited failisüsteemis)
+old_name,new_name
+# class names in src/main/java/meik
+ListViewPane.java, 
+MainView.java,
+NavigationBar.java
+
+

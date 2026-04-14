@@ -1,4 +1,4 @@
-package model;
+package mudelid;
 
 /**
  * Theme modes supported by the MVP.

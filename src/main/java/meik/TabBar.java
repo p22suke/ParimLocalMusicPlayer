@@ -1,4 +1,4 @@
-package ui;
+package meik;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -24,9 +24,9 @@ public final class TabBar extends ScrollPane {
     }
 
     public TabBar(Consumer<String> onTabSelected,
-                  Consumer<String> onTabClosed,
-                  Runnable onAddTab,
-                  String addTabLabel) {
+            Consumer<String> onTabClosed,
+            Runnable onAddTab,
+            String addTabLabel) {
         this.onTabSelected = onTabSelected;
         this.onTabClosed = onTabClosed;
         this.onAddTab = onAddTab;

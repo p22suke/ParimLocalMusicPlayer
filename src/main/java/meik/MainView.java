@@ -1,11 +1,13 @@
-package ui;
+package meik;
 
+//java enda meigikott
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -15,54 +17,64 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.Album;
-import model.Artist;
-import model.Playlist;
-import model.Song;
-import model.ThemeMode;
+// meie mudelid
+import mudelid.Album;
+import mudelid.Artist;
+import mudelid.Playlist;
+import mudelid.Song;
+import mudelid.ThemeMode;
 import service.AnalyticsService;
 import service.LibraryService;
+import service.MetadataService;
 import service.PlaybackService;
 import service.PlaylistPersistenceService;
 import service.ThemeService;
-
+// klassikaline java kirjandus
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Day 2 layout:
  * - global search
  * - listView (tabs + content)
  * - unitView (tabs + content)
  * - existing player bar
  */
+
 public final class MainView extends VBox {
+    // konstandid on alati javas CAPS_LOCK
     private static final String ALL_SONGS_KEY = "all-songs";
     private static final String PLAYING_FROM_PREFIX = "Playing from: ";
     private static final String LIKED_SONGS_NAME = "Liked Music";
-
+    // kutsume esinema meie enda mudelite servicesid
     private final LibraryService libraryService;
     private final PlaybackService playbackService;
     private final AnalyticsService analyticsService;
     private final ThemeService themeService;
     private final PlaylistPersistenceService playlistPersistenceService;
-
+    private final MetadataService metadataService;
+    // java meigikotist on meil vaja:
     private final TextField searchField = new TextField();
     private final Button dayNightButton = new Button();
-    private final Button displayModeButton = new Button();
     private final ListViewPane listViewPane;
     private final UnitViewPane unitViewPane;
-
+    // mis on observableList? i dont know. vastab copilot: see on vist mingi java
+    // eriline list, mis oskab vaadata,
+    // millal me sinna midagi lisame või sealt eemaldame, ja siis vastavalt
+    // reageerida. nagu mingi vaate ja andmete
+    // vahelise sünkroonimise tööriist. me kasutame seda selleks, et kui me muudame
+    // mingit laulu nime või lisame uue laulu, siis see muutus kajastuks kohe meie
+    // kasutajaliideses, ilma et me peaksime kogu vaadet uuesti joonistama.
     private final ObservableList<Song> unitSongItems = FXCollections.observableArrayList();
 
+    // meie mudelid!!
     private final List<Song> librarySongs = new ArrayList<>();
     private final List<Album> allAlbums = new ArrayList<>();
     private final List<Artist> allArtists = new ArrayList<>();
@@ -74,19 +86,20 @@ public final class MainView extends VBox {
     private ListTab activeListTab = ListTab.PLAYLISTS;
     private SongListContext activeUnitContext;
     private ThemeMode themeMode = ThemeMode.DAY;
-    private DisplayMode displayMode = resolveDefaultDisplayMode();
     private Scene scene;
 
     public MainView(LibraryService libraryService,
-                    PlaybackService playbackService,
-                    AnalyticsService analyticsService,
-                    ThemeService themeService,
-                    PlaylistPersistenceService playlistPersistenceService) {
+            PlaybackService playbackService,
+            AnalyticsService analyticsService,
+            ThemeService themeService,
+            PlaylistPersistenceService playlistPersistenceService,
+            MetadataService metadataService) {
         this.libraryService = libraryService;
         this.playbackService = playbackService;
         this.analyticsService = analyticsService;
         this.themeService = themeService;
         this.playlistPersistenceService = playlistPersistenceService;
+        this.metadataService = metadataService;
 
         getStyleClass().add("app-root");
         setSpacing(0);
@@ -118,18 +131,14 @@ public final class MainView extends VBox {
         dayNightButton.setOnAction(event -> toggleDayNight());
         updateDayNightButtonLabel();
 
-        displayModeButton.getStyleClass().add("display-mode-button");
-        displayModeButton.setOnAction(event -> cycleDisplayMode());
-        updateDisplayModeButtonLabel();
-
-        HBox searchRow = new HBox(8, searchField, displayModeButton, dayNightButton);
+        HBox searchRow = new HBox(8, searchField, dayNightButton);
         HBox.setHgrow(searchField, Priority.ALWAYS);
 
         VBox.setVgrow(listViewPane, Priority.ALWAYS);
         VBox.setVgrow(unitViewPane, Priority.ALWAYS);
         middleFloor.getChildren().addAll(searchRow, listViewPane, unitViewPane);
 
-        PlayerBar playerBar = new PlayerBar(playbackService, this::addSongToLikedSongs);
+        PlayerBar playerBar = new PlayerBar(playbackService);
         middleFloor.prefHeightProperty().bind(heightProperty().multiply(0.90));
         playerBar.prefHeightProperty().bind(heightProperty().multiply(0.10));
 
@@ -141,8 +150,10 @@ public final class MainView extends VBox {
         refreshTabs();
         applySearchFilter();
 
-        playbackService.queueSnapshotProperty().addListener((ListChangeListener<? super Song>) change -> syncQueueToActiveUnit());
-        playbackService.currentContextProperty().addListener((observable, oldValue, newValue) -> syncQueueToActiveUnit());
+        playbackService.queueSnapshotProperty()
+                .addListener((ListChangeListener<? super Song>) change -> syncQueueToActiveUnit());
+        playbackService.currentContextProperty()
+                .addListener((observable, oldValue, newValue) -> syncQueueToActiveUnit());
     }
 
     public void attachScene(Scene scene) {
@@ -169,10 +180,10 @@ public final class MainView extends VBox {
         table.getStyleClass().add("song-table");
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         table.setPlaceholder(new Label("No songs in this context."));
-        table.getColumns().add(TableCellRenderer.createSongColumn("laul", song -> formatText(song.getTitle()), 0.32));
-        table.getColumns().add(TableCellRenderer.createSongColumn("kunstnik", song -> formatText(song.getArtist()), 0.24));
-        table.getColumns().add(TableCellRenderer.createSongColumn("album", song -> formatText(song.getAlbum()), 0.28));
-        table.getColumns().add(TableCellRenderer.createSongColumn("year", Song::getDisplayYear, 0.16));
+        table.getColumns().add(TableCellRenderer.createSongColumn("laul", song -> song.getTitle(), 0.28));
+        table.getColumns().add(TableCellRenderer.createSongColumn("kunstnik", song -> song.getArtist(), 0.20));
+        table.getColumns().add(TableCellRenderer.createSongColumn("album", song -> song.getAlbum(), 0.38));
+        table.getColumns().add(TableCellRenderer.createSongColumn("aasta", song -> song.getYear(), 0.14));
         return table;
     }
 
@@ -240,6 +251,10 @@ public final class MainView extends VBox {
                 });
                 contextMenu.getItems().add(removeItem);
             }
+
+            javafx.scene.control.MenuItem editMetadataItem = new javafx.scene.control.MenuItem("edit metadata");
+            editMetadataItem.setOnAction(actionEvent -> openMetadataEditor(selected));
+            contextMenu.getItems().add(editMetadataItem);
 
             contextMenu.show(table, event.getScreenX(), event.getScreenY());
         });
@@ -358,10 +373,10 @@ public final class MainView extends VBox {
         listViewPane.showPlaylistActions(activeListTab == ListTab.PLAYLISTS);
 
         List<TabBar.TabItem> unitTabs = contextsByKey.values().stream()
-            .map(context -> new TabBar.TabItem(
-                context.key(),
-                context.name(),
-                !ALL_SONGS_KEY.equals(context.key()) && !isLikedSongsKey(context.key())))
+                .map(context -> new TabBar.TabItem(
+                        context.key(),
+                        context.name(),
+                        !ALL_SONGS_KEY.equals(context.key()) && !isLikedSongsKey(context.key())))
                 .toList();
         unitViewPane.setTabs(unitTabs, activeUnitContext == null ? ALL_SONGS_KEY : activeUnitContext.key());
     }
@@ -390,7 +405,8 @@ public final class MainView extends VBox {
                     .sorted(Comparator.comparing(this::playlistSortKey, String.CASE_INSENSITIVE_ORDER))
                     .map(playlist -> {
                         int plays = analyticsService.getPlaylistPlayCount(playlist.getName());
-                        String label = playlist.getName() + " (songs=" + playlist.getSongs().size() + ", plays=" + plays + ")";
+                        String label = playlist.getName() + " (songs=" + playlist.getSongs().size() + ", plays=" + plays
+                                + ")";
                         String searchable = (playlist.getName() + " " + playlist.getSongs().stream()
                                 .map(Song::toSearchableText)
                                 .reduce("", (left, right) -> left + " " + right)).toLowerCase();
@@ -403,20 +419,36 @@ public final class MainView extends VBox {
                     })
                     .toList();
             case ALBUMS -> allAlbums.stream()
-                    .map(album -> new ListViewPane.ListItem(
-                            "album:" + album.name() + "@@" + album.artistName(),
-                        "Album: " + formatText(album.name()),
-                        formatText(album.name()) + " -- " + formatText(album.artistName()) + " (" + album.songs().size() + ")",
-                            (album.name() + " " + album.artistName()).toLowerCase(),
-                            album.songs()))
+                    .map(album -> {
+                        String year = album.year();
+                        String yearPart = year.isBlank() ? "" : " · " + year;
+                        String label = album.name() + " -- " + album.artistName()
+                                + yearPart + " (" + album.songs().size() + " songs)";
+                        String searchable = (album.name() + " " + album.artistName() + " " + year).toLowerCase();
+                        return new ListViewPane.ListItem(
+                                "album:" + album.name() + "@@" + album.artistName(),
+                                "Album: " + album.name(),
+                                label,
+                                searchable,
+                                album.songs());
+                    })
                     .toList();
             case ARTISTS -> allArtists.stream()
-                    .map(artist -> new ListViewPane.ListItem(
-                            "artist:" + artist.name(),
-                        "Kunstnik: " + formatText(artist.name()),
-                        formatText(artist.name()) + " (" + artist.songs().size() + ")",
-                            artist.name().toLowerCase(),
-                            artist.songs()))
+                    .map(artist -> {
+                        long albumCount = artist.songs().stream()
+                                .map(Song::getAlbum)
+                                .distinct()
+                                .count();
+                        String label = artist.name()
+                                + " (" + albumCount + " albums, " + artist.songs().size() + " songs)";
+                        String searchable = artist.name().toLowerCase();
+                        return new ListViewPane.ListItem(
+                                "artist:" + artist.name(),
+                                "Kunstnik: " + artist.name(),
+                                label,
+                                searchable,
+                                artist.songs());
+                    })
                     .toList();
         };
     }
@@ -645,33 +677,6 @@ public final class MainView extends VBox {
         dayNightButton.setText(themeMode == ThemeMode.DAY ? "DAY" : "NIGHT");
     }
 
-    private void cycleDisplayMode() {
-        displayMode = displayMode.next();
-        updateDisplayModeButtonLabel();
-        refreshTabs();
-        applySearchFilter();
-        unitViewPane.getSongTable().refresh();
-    }
-
-    private void updateDisplayModeButtonLabel() {
-        displayModeButton.setText(displayMode.buttonLabel);
-    }
-
-    private DisplayMode resolveDefaultDisplayMode() {
-        String explicit = System.getProperty("parim.displayMode");
-        DisplayMode fromProperty = DisplayMode.fromValue(explicit);
-        if (fromProperty != null) {
-            return fromProperty;
-        }
-
-        Locale locale = Locale.getDefault();
-        if (locale == null) {
-            return DisplayMode.SEE_ON_LAUSE;
-        }
-
-        return DisplayMode.SEE_ON_LAUSE;
-    }
-
     private void addSongToLikedSongs(Song song) {
         if (song == null) {
             return;
@@ -720,43 +725,57 @@ public final class MainView extends VBox {
         return playlist.getName();
     }
 
-    private String formatText(String value) {
-        if (value == null || value.isBlank()) {
-            return "";
-        }
-        return switch (displayMode) {
-            case CAPS_LOCK -> value.toUpperCase(Locale.ROOT);
-            case LOWER_CASE -> value.toLowerCase(Locale.ROOT);
-            case KARJU_KARJU -> toTitleCase(value);
-            case SEE_ON_LAUSE -> toSentenceCase(value);
-        };
-    }
+    private void openMetadataEditor(Song song) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        styleDialog(dialog);
+        dialog.setTitle("Edit metadata");
+        dialog.setHeaderText(song.getFilePath().getFileName() == null
+                ? song.getFilePath().toString()
+                : song.getFilePath().getFileName().toString());
 
-    private String toTitleCase(String value) {
-        String[] parts = value.trim().split("\\s+");
-        StringBuilder builder = new StringBuilder();
-        for (String part : parts) {
-            if (part.isBlank()) {
-                continue;
-            }
-            if (!builder.isEmpty()) {
-                builder.append(' ');
-            }
-            String lower = part.toLowerCase(Locale.ROOT);
-            builder.append(lower.substring(0, 1).toUpperCase(Locale.ROOT));
-            if (lower.length() > 1) {
-                builder.append(lower.substring(1));
-            }
-        }
-        return builder.isEmpty() ? value : builder.toString();
-    }
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(8);
+        grid.setStyle("-fx-padding: 10;");
 
-    private String toSentenceCase(String value) {
-        String lower = value.toLowerCase(Locale.ROOT).trim();
-        if (lower.isEmpty()) {
-            return lower;
-        }
-        return lower.substring(0, 1).toUpperCase(Locale.ROOT) + lower.substring(1);
+        TextField titleField = new TextField(song.getTitle());
+        TextField artistField = new TextField(song.getArtist());
+        TextField albumField = new TextField(song.getAlbum());
+        TextField yearField = new TextField(song.getYear());
+
+        titleField.setPrefWidth(240);
+
+        grid.add(new Label("title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("artist:"), 0, 1);
+        grid.add(artistField, 1, 1);
+        grid.add(new Label("album:"), 0, 2);
+        grid.add(albumField, 1, 2);
+        grid.add(new Label("year:"), 0, 3);
+        grid.add(yearField, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) {
+                return;
+            }
+            try {
+                metadataService.writeMetadata(
+                        song.getFilePath(),
+                        titleField.getText(),
+                        artistField.getText(),
+                        albumField.getText(),
+                        yearField.getText());
+                loadLibrary();
+                rebuildOpenContextsAfterReload();
+                refreshTabs();
+                applySearchFilter();
+            } catch (java.io.IOException e) {
+                showInfo("Could not save metadata: " + e.getMessage());
+            }
+        });
     }
 
     private void applyTheme() {
@@ -809,42 +828,6 @@ public final class MainView extends VBox {
                 }
             }
             return PLAYLISTS;
-        }
-    }
-
-    private enum DisplayMode {
-        CAPS_LOCK("CAPS"),
-        LOWER_CASE("lower"),
-        KARJU_KARJU("Karju"),
-        SEE_ON_LAUSE("Lause");
-
-        private final String buttonLabel;
-
-        DisplayMode(String buttonLabel) {
-            this.buttonLabel = buttonLabel;
-        }
-
-        private DisplayMode next() {
-            return switch (this) {
-                case CAPS_LOCK -> LOWER_CASE;
-                case LOWER_CASE -> KARJU_KARJU;
-                case KARJU_KARJU -> SEE_ON_LAUSE;
-                case SEE_ON_LAUSE -> CAPS_LOCK;
-            };
-        }
-
-        private static DisplayMode fromValue(String raw) {
-            if (raw == null || raw.isBlank()) {
-                return null;
-            }
-            String value = raw.trim().toLowerCase(Locale.ROOT);
-            return switch (value) {
-                case "caps", "caps_lock", "capslock", "upper", "uppercase" -> CAPS_LOCK;
-                case "lower", "lower_case", "lowercase" -> LOWER_CASE;
-                case "karju", "karju_karju", "title", "title_case", "titlecase" -> KARJU_KARJU;
-                case "lause", "see_on_lause", "sentence", "sentence_case", "sentencecase" -> SEE_ON_LAUSE;
-                default -> null;
-            };
         }
     }
 

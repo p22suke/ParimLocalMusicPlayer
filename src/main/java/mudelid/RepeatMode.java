@@ -1,4 +1,4 @@
-package model;
+package mudelid;
 
 /**
  * Repeat mode for the active playback queue.

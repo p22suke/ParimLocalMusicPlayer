@@ -1,11 +1,11 @@
-package ui;
+package meik;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.text.Text;
-import model.Song;
+import mudelid.Song;
 
 import java.util.function.Function;
 
@@ -16,7 +16,8 @@ public final class TableCellRenderer {
     private TableCellRenderer() {
     }
 
-    public static TableColumn<Song, String> createSongColumn(String title, Function<Song, String> mapper, double widthRatio) {
+    public static TableColumn<Song, String> createSongColumn(String title, Function<Song, String> mapper,
+            double widthRatio) {
         TableColumn<Song, String> column = new TableColumn<>(title);
         column.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(mapper.apply(cellData.getValue())));
         column.setCellFactory(ignored -> new WrappingCell());

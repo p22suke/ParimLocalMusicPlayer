@@ -1,4 +1,4 @@
-package model;
+package mudelid;
 
 import java.nio.file.Path;
 import java.util.Locale;
@@ -14,7 +14,6 @@ import java.util.Objects;
 public final class Song {
     public static final String UNKNOWN_ARTIST = "Unknown Kunstnik";
     public static final String UNKNOWN_ALBUM = "Album";
-    public static final String UNKNOWN_YEAR = "00000";
 
     private final String id;
     private final String title;
@@ -28,8 +27,13 @@ public final class Song {
         this.title = sanitise(title, deriveFallbackTitle(filePath));
         this.artist = sanitise(artist, UNKNOWN_ARTIST);
         this.album = sanitise(album, UNKNOWN_ALBUM);
-        this.year = sanitise(year, UNKNOWN_YEAR);
+        this.year = sanitise(year, "");
         this.filePath = Objects.requireNonNull(filePath, "filePath cannot be null");
+    }
+
+    // LIINA!!!!! backwards-compat constructor used by tests and old call sites
+    public Song(String id, String title, String artist, String album, Path filePath) {
+        this(id, title, artist, album, "", filePath);
     }
 
     public String getId() {
@@ -68,20 +72,16 @@ public final class Song {
         return toCamelCase(album);
     }
 
-    public String getDisplayYear() {
-        return year;
-    }
-
     public String getDisplayLine() {
-        return "%s -- %s -- %s -- %s".formatted(
+        return "%s -- %s -- %s".formatted(
                 getDisplayTitle(),
                 getDisplayArtist(),
-                getDisplayAlbum(),
-                getDisplayYear());
+                getDisplayAlbum());
     }
 
     public String toSearchableText() {
-        return (title + " " + artist + " " + album + " " + year).toLowerCase(Locale.ROOT);
+        String y = year != null && !year.isBlank() ? " " + year : "";
+        return (title + " " + artist + " " + album + y).toLowerCase(Locale.ROOT);
     }
 
     private static String sanitise(String value, String fallback) {

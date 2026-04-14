@@ -20,6 +20,8 @@ hs_err_pid*
 # Local music files (keep placeholder only)
 data/music/*
 !data/music/.gitkeep
+andmed/music/*
+!andmed/music/.gitkeep
 
 # Committed sample music bundle for cross-machine testing
 !data/untitled folder/

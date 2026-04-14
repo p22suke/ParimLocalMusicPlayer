@@ -1,6 +1,6 @@
 package service;
 
-import model.ThemeMode;
+import mudelid.ThemeMode;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,9 +21,9 @@ public final class ThemeService {
     public String stylesheetFor(ThemeMode mode) {
         ThemeMode resolved = resolve(mode);
         return switch (resolved) {
-            case DAY -> "/styles/day.css";
-            case NIGHT -> "/styles/night.css";
-            case AUTO -> "/styles/day.css";
+            case DAY -> "/meigid/day.css";
+            case NIGHT -> "/meigid/night.css";
+            case AUTO -> "/meigid/day.css";
         };
     }
 
@@ -71,7 +71,8 @@ public final class ThemeService {
         ZonedDateTime sunset = date.atStartOfDay(zoneId).withZoneSameInstant(ZoneId.of("UTC"))
                 .plusMinutes(Math.round(sunsetUtc * 60));
 
-        return new SunTimes(sunrise.withZoneSameInstant(zoneId).toLocalTime(), sunset.withZoneSameInstant(zoneId).toLocalTime());
+        return new SunTimes(sunrise.withZoneSameInstant(zoneId).toLocalTime(),
+                sunset.withZoneSameInstant(zoneId).toLocalTime());
     }
 
     private double calculateUtcHour(int dayOfYear, double latitude, double lngHour, boolean sunrise) {

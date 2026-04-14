@@ -1,4 +1,4 @@
-package ui;
+package meik;
 
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -10,18 +10,16 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.RepeatMode;
-import model.Song;
+import mudelid.RepeatMode;
+import mudelid.Song;
 import service.PlaybackService;
-
-import java.util.function.Consumer;
 
 /**
  * Bottom floor player bar with compact now-playing metadata and transport
  * controls.
  */
 public final class PlayerBar extends VBox {
-    public PlayerBar(PlaybackService playbackService, Consumer<Song> likeSongHandler) {
+    public PlayerBar(PlaybackService playbackService) {
         getStyleClass().addAll("section-pane", "player-bar");
         setSpacing(8);
         setPadding(new Insets(8, 10, 8, 10));
@@ -45,7 +43,8 @@ public final class PlayerBar extends VBox {
 
         Button playPauseButton = new Button();
         playPauseButton.getStyleClass().add("primary-button");
-        playPauseButton.textProperty().bind(Bindings.when(playbackService.playingProperty()).then("vaikus").otherwise("MUSS"));
+        playPauseButton.textProperty()
+                .bind(Bindings.when(playbackService.playingProperty()).then("vaikus").otherwise("MUSS"));
         playPauseButton.setOnMouseClicked(event -> {
             if (event.getButton() != MouseButton.PRIMARY) {
                 return;
@@ -60,24 +59,6 @@ public final class PlayerBar extends VBox {
         Button nextButton = new Button(">>");
         nextButton.setOnAction(event -> playbackService.next());
 
-        Button heartButton = new Button("♥");
-        heartButton.getStyleClass().add("heart-button");
-        heartButton.disableProperty().bind(playbackService.currentSongProperty().isNull());
-        heartButton.setOnAction(event -> {
-            Song song = playbackService.currentSongProperty().get();
-            if (song != null) {
-                likeSongHandler.accept(song);
-            }
-        });
-
-        Button shuffleButton = new Button();
-        shuffleButton.getStyleClass().add("status-toggle");
-        shuffleButton.textProperty().bind(Bindings.when(playbackService.shuffleEnabledProperty()).then("Shuffle").otherwise("shuffle"));
-        shuffleButton.setOnAction(event -> playbackService.toggleShuffle());
-        updateToggleState(shuffleButton, playbackService.shuffleEnabledProperty().get());
-        playbackService.shuffleEnabledProperty().addListener((observable, oldValue, newValue) ->
-                updateToggleState(shuffleButton, newValue));
-
         Button repeatButton = new Button();
         repeatButton.getStyleClass().add("status-toggle");
         repeatButton.textProperty().bind(Bindings.createStringBinding(() -> {
@@ -86,10 +67,10 @@ public final class PlayerBar extends VBox {
         }, playbackService.repeatModeProperty()));
         repeatButton.setOnAction(event -> playbackService.cycleRepeatMode());
         updateToggleState(repeatButton, playbackService.repeatModeProperty().get() != RepeatMode.OFF);
-        playbackService.repeatModeProperty().addListener((observable, oldValue, newValue) ->
-                updateToggleState(repeatButton, newValue != RepeatMode.OFF));
+        playbackService.repeatModeProperty().addListener(
+                (observable, oldValue, newValue) -> updateToggleState(repeatButton, newValue != RepeatMode.OFF));
 
-        HBox controls = new HBox(6, previousButton, playPauseButton, nextButton, heartButton, shuffleButton, repeatButton);
+        HBox controls = new HBox(6, previousButton, playPauseButton, nextButton, repeatButton);
         controls.setAlignment(Pos.CENTER_LEFT);
 
         Label contextLabel = new Label();

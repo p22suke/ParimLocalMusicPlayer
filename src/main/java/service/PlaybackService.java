@@ -16,9 +16,9 @@ import javafx.collections.FXCollections;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import model.PlaybackQueue;
-import model.RepeatMode;
-import model.Song;
+import mudelid.PlaybackQueue;
+import mudelid.RepeatMode;
+import mudelid.Song;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,10 +37,10 @@ public final class PlaybackService {
     private final StringProperty currentContext = new SimpleStringProperty("Playing from: library");
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
-    private final BooleanProperty shuffleEnabled = new SimpleBooleanProperty(false);
     private final ObjectProperty<RepeatMode> repeatMode = new SimpleObjectProperty<>(RepeatMode.OFF);
     private final StringProperty errorMessage = new SimpleStringProperty("");
-    private final ReadOnlyListWrapper<Song> queueSnapshot = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
+    private final ReadOnlyListWrapper<Song> queueSnapshot = new ReadOnlyListWrapper<>(
+            FXCollections.observableArrayList());
 
     private MediaPlayer mediaPlayer;
     private Song analyticsSong;
@@ -103,12 +103,6 @@ public final class PlaybackService {
         }
     }
 
-    public void toggleShuffle() {
-        Song current = playbackQueue.toggleShuffle();
-        syncQueueState();
-        currentSong.set(current);
-    }
-
     public void cycleRepeatMode() {
         repeatMode.set(playbackQueue.cycleRepeatMode());
     }
@@ -152,10 +146,6 @@ public final class PlaybackService {
 
     public BooleanProperty playingProperty() {
         return playing;
-    }
-
-    public BooleanProperty shuffleEnabledProperty() {
-        return shuffleEnabled;
     }
 
     public ObjectProperty<RepeatMode> repeatModeProperty() {
@@ -254,7 +244,6 @@ public final class PlaybackService {
 
     private void syncQueueState() {
         queueSnapshot.setAll(playbackQueue.getActiveSongs());
-        shuffleEnabled.set(playbackQueue.isShuffleEnabled());
         repeatMode.set(playbackQueue.getRepeatMode());
     }
 

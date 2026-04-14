@@ -1,8 +1,8 @@
 package service;
 
-import model.Playlist;
-import model.PlaylistSnapshot;
-import model.Song;
+import mudelid.Playlist;
+import mudelid.PlaylistSnapshot;
+import mudelid.Song;
 import repository.PlaylistRepository;
 
 import java.util.ArrayList;

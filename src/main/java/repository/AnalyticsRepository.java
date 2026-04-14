@@ -1,14 +1,18 @@
+//kaust to be renamed
 package repository;
-
-import model.PlayEvent;
-
+// java moodsa kirjanduse import (meie enda loodud klassid)
+import mudelid.PlayEvent;
+// java klassikalise kirjanduse import
 import java.util.List;
 import java.util.Map;
 
 /**
- * Repository abstraction so the MVP can start with JSON and move to SQLite or a
- * real database later without changing the rest of the app.
+ * AnalyticsRepository is an interface that defines methods for recording and retrieving analytics data related to play events 
+ * and playlist plays. It allows for flexibility in the underlying data storage mechanism, enabling the MVP (Model-View-Presenter) 
+ * architecture to start with a simple JSON-based implementation and later transition to a more robust solution like SQLite 
+ * or a real database without affecting the rest of the application.
  */
+
 public interface AnalyticsRepository {
     void recordPlay(PlayEvent event);
 

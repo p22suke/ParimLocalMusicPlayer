@@ -1,4 +1,4 @@
-package ui;
+package meik;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Hyperlink;
@@ -6,7 +6,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.Song;
+import mudelid.Song;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,10 +20,10 @@ public final class ListViewPane extends VBox {
     private final ListView<ListItem> contentList = new ListView<>();
 
     public ListViewPane(Consumer<String> onTabSelected,
-                        Consumer<ListItem> onItemOpened,
-                        Runnable onCreatePlaylist,
-                        Runnable onRenamePlaylist,
-                        Runnable onDeletePlaylist) {
+            Consumer<ListItem> onItemOpened,
+            Runnable onCreatePlaylist,
+            Runnable onRenamePlaylist,
+            Runnable onDeletePlaylist) {
         getStyleClass().addAll("section-pane", "list-pane");
         setSpacing(6);
         setPadding(new Insets(8));

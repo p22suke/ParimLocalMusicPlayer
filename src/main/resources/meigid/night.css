@@ -196,23 +196,6 @@
     -fx-background-color: linear-gradient(to bottom, #121212, #3a3a3a);
 }
 
-.display-mode-button {
-    -fx-min-width: 52px;
-    -fx-min-height: 28px;
-    -fx-max-height: 28px;
-    -fx-background-color: linear-gradient(to bottom, #2f2f2f, #151515);
-    -fx-border-color: #5cff5c;
-    -fx-border-width: 2px;
-    -fx-background-radius: 0;
-    -fx-text-fill: #d8ffd8;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-}
-
-.display-mode-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #121212, #3a3a3a);
-}
-
 .player-bar .button {
     -fx-background-radius: 0;
 }
@@ -258,7 +241,7 @@
 }
 
 .dialog-pane:header .header-panel,
-.dialog-pane > *.button-bar > *.container {
+.dialog-pane>*.button-bar>*.container {
     -fx-background-color: #1d1d1d;
 }
 

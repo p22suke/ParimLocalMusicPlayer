@@ -38,6 +38,11 @@
             <version>2.18.3</version>
         </dependency>
         <dependency>
+            <groupId>net.jthink</groupId>
+            <artifactId>jaudiotagger</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
@@ -93,9 +98,9 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>Launcher</mainClass>
-                    <launcher>muLocalMusicList</launcher>
-                    <jlinkZipName>muLocalMusicList-runtime</jlinkZipName>
-                    <jlinkImageName>muLocalMusicList-runtime</jlinkImageName>
+                    <launcher>ParimLocalMusicPlayer</launcher>
+                    <jlinkZipName>ParimLocalMusicPlayer-runtime</jlinkZipName>
+                    <jlinkImageName>ParimLocalMusicPlayer-runtime</jlinkImageName>
                     <stripDebug>true</stripDebug>
                     <noHeaderFiles>true</noHeaderFiles>
                     <noManPages>true</noManPages>
@@ -119,9 +124,9 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>1.7.4</version>
                         <configuration>
-                            <name>muLocalMusicList</name>
+                            <name>ParimLocalMusicPlayer</name>
                             <appVersion>1.0.0</appVersion>
-                            <vendor>muLocalMusicList</vendor>
+                            <vendor>ParimLocalMusicPlayer</vendor>
                             <input>${project.build.directory}</input>
                             <mainJar>${project.build.finalName}.jar</mainJar>
                             <mainClass>Launcher</mainClass>
@@ -141,9 +146,9 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>1.7.4</version>
                         <configuration>
-                            <name>muLocalMusicList</name>
+                            <name>ParimLocalMusicPlayer</name>
                             <appVersion>1.0.0</appVersion>
-                            <vendor>muLocalMusicList</vendor>
+                            <vendor>ParimLocalMusicPlayer</vendor>
                             <input>${project.build.directory}</input>
                             <mainJar>${project.build.finalName}.jar</mainJar>
                             <mainClass>Launcher</mainClass>

@@ -1,8 +1,8 @@
 package service;
 
-import model.PlayEvent;
-import model.Song;
-import model.SongStats;
+import mudelid.PlayEvent;
+import mudelid.Song;
+import mudelid.SongStats;
 import org.junit.jupiter.api.Test;
 import repository.AnalyticsRepository;
 
@@ -24,7 +24,7 @@ class AnalyticsServiceTest {
     void qualifiedPlayIsStoredOnlyAfterThirtySeconds() {
         InMemoryAnalyticsRepository repository = new InMemoryAnalyticsRepository();
         AnalyticsService service = new AnalyticsService(repository, ZoneId.of("UTC"));
-        Song song = new Song("song-1", "title", "artist", "album", "2024", Path.of("demo.mp3"));
+        Song song = new Song("song-1", "title", "artist", "album", Path.of("demo.mp3"));
 
         assertFalse(service.recordPlayIfQualified(song, 10));
         assertTrue(service.recordPlayIfQualified(song, 30));

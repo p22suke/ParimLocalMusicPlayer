@@ -1,4 +1,4 @@
-package ui;
+package meik;
 
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
